@@ -68,8 +68,9 @@ func parseMove(moveString string) uint64 {
 */
 
 // parse UCI "position" command
-func parsePosition(command string) {
+func parsePosition(command string) bool {
 	moveFlag := false
+
 	// split the command by whitespace and loop through words
 	words := strings.Fields(command)
 	for i, word := range words {
@@ -88,11 +89,13 @@ func parsePosition(command string) {
 			moveFlag = true
 		}
 		if moveFlag {
-			makeMove(parseMove(word))
-			printBoard()
+			if makeMove(parseMove(word)) != 1 {
+				return false
+			}
+			return true
 		}
 	}
-
+	return false
 }
 
 /*

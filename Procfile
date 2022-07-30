@@ -1,1 +1,1 @@
-web: bin/goChessAPI
+web: goChessAPI

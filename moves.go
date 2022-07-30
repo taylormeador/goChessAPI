@@ -470,11 +470,12 @@ func makeMove(move uint64) int {
 		kingLocation = getLeastSignificantBitIndex(bitboards[k])
 	}
 
+	// if the move leaves the king in check, it is not valid
 	if isSquareAttacked(kingLocation, enemySide) != 0 {
 		// revert the game state
 		restoreBoardFromCopy(gameState)
 		return 0
-	} else {
+	} else { // change sides and return
 		side = enemySide
 		return 1
 	}

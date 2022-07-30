@@ -26,14 +26,16 @@ func handleRequests(port string) {
 
 // main
 func main() {
+	// init piece attacks
 	initAll()
-	parseFEN(startPosition)
 
+	// get port
 	port := os.Getenv("PORT")
 
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
 
+	// handler
 	handleRequests(port)
 }

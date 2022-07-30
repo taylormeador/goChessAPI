@@ -317,6 +317,13 @@ func printMove(move uint64) {
 	)
 }
 
+// return string representation of encoded move
+func decodeMove(move uint64) string {
+	return algebraic[getMoveAttr(move, "source")] +
+		algebraic[getMoveAttr(move, "target")] +
+		promotedPieces[getMoveAttr(move, "promoted")]
+}
+
 // loop through all moves in move list and print
 func printMoveList(moveList []uint64) {
 	// formatting

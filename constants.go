@@ -533,6 +533,12 @@ type FENjson struct {
 	legal bool   `json:"legal"`
 }
 
+type bestMovejson struct {
+	FEN   string `json:"FEN"`
+	legal bool   `json:"legal"`
+	best  string `json:"best"`
+}
+
 /*
                            castling   move     in      in
                               right update     binary  decimal

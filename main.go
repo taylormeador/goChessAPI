@@ -38,12 +38,10 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	FEN := keys[0]
 	log.Println("Url Param 'FEN' is: " + FEN)
 	log.Println("String replaced FEN is: " + strings.Replace(FEN, "_", " ", -1))
+	formattedFEN := "position fen " + strings.Replace(FEN, "_", " ", -1)
 
 	// check legality
-	isFENLegal := parsePosition(strings.Replace(FEN, "_", " ", -1))
-
-	// debug
-	log.Printf("debug: %s %t", FEN, parsePosition(strings.Replace(FEN, "_", " ", -1)))
+	isFENLegal := parsePosition(formattedFEN)
 
 	// build json struct
 	response := FENjson{FEN: FEN, legal: isFENLegal}
@@ -63,13 +61,20 @@ func main() {
 	// init piece attacks
 	initAll()
 
-	// get port
-	port := os.Getenv("PORT")
+	debug := true
+	if debug {
+		FEN := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1_moves_e2e4"
+		fmt.Println(parsePosition(strings.Replace(FEN, "_", " ", -1)))
+	} else {
+		// get port
+		port := os.Getenv("PORT")
 
-	if port == "" {
-		log.Fatal("$PORT must be set")
+		if port == "" {
+			log.Fatal("$PORT must be set")
+		}
+
+		// handler
+		handleRequests(port)
 	}
 
-	// handler
-	handleRequests(port)
 }

@@ -26,6 +26,10 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	// testing getting GET parameters
 	keys, ok := r.URL.Query()["key"]
 
+	// log keys
+	log.Println(keys)
+
+	// check that keys are present
 	if !ok || len(keys[0]) < 1 {
 		log.Println("Url Param 'key' is missing")
 		return
@@ -36,8 +40,6 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	key := keys[0]
 
 	log.Println("Url Param 'key' is: " + string(key))
-
-	//json.NewEncoder(w).Encode(FENstring)
 }
 
 func handleRequests(port string) {

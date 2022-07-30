@@ -528,6 +528,11 @@ const (
 	stalematePosition = "4k3/R7/8/8/8/8/8/3R1R1K b - - 0 1"
 )
 
+type FENjson struct {
+	FEN   string `json:"FEN"`
+	legal bool   `json:"legal"`
+}
+
 /*
                            castling   move     in      in
                               right update     binary  decimal

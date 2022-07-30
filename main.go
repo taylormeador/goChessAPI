@@ -37,8 +37,14 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	FEN := keys[0]
 	log.Println("Url Param 'FEN' is: " + string(FEN))
 
-	// check if move is valid
-	json.NewEncoder(w).Encode(parsePosition(FEN))
+	// build json struct
+	response := FENjson{FEN: FEN, legal: parsePosition(FEN)}
+
+	// debug
+	log.Printf("debug: %s %t", string(FEN), parsePosition(FEN))
+
+	// send json response
+	json.NewEncoder(w).Encode(response)
 }
 
 func handleRequests(port string) {

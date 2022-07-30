@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,22 +25,20 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: isLegal")
 
 	// testing getting GET parameters
-	keys, ok := r.URL.Query()["key"]
+	keys, ok := r.URL.Query()["FEN"]
 
-	// log keys
-	log.Println(keys)
-
-	// check that keys are present
+	// check that fen string is present
 	if !ok || len(keys[0]) < 1 {
-		log.Println("Url Param 'key' is missing")
+		log.Println("Url Param 'FEN' is missing")
 		return
 	}
 
-	// Query()["key"] will return an array of items,
-	// we only want the single item.
-	key := keys[0]
+	// log FEN
+	FEN := keys[0]
+	log.Println("Url Param 'FEN' is: " + string(FEN))
 
-	log.Println("Url Param 'key' is: " + string(key))
+	// check if move is valid
+	json.NewEncoder(w).Encode(parsePosition(FEN))
 }
 
 func handleRequests(port string) {

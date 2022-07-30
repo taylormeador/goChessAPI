@@ -1,1 +1,1 @@
-web: goChessAPI
+web: main

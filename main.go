@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 // init
@@ -37,11 +38,14 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	FEN := keys[0]
 	log.Println("Url Param 'FEN' is: " + string(FEN))
 
+	// check legality
+	isFENLegal := parsePosition(strings.Replace(FEN, "_", " ", -1))
+
 	// build json struct
-	response := FENjson{FEN: FEN, legal: parsePosition(FEN)}
+	response := FENjson{FEN: FEN, legal: isFENLegal}
 
 	// debug
-	log.Printf("debug: %s %t", string(FEN), parsePosition(FEN))
+	log.Printf("debug: %s %t", FEN, parsePosition(strings.Replace(FEN, "_", " ", -1)))
 
 	// send json response
 	json.NewEncoder(w).Encode(response)

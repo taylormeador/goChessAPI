@@ -23,6 +23,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 func handleRequests(port string) {
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/isLegal", isLegal)
+	http.HandleFunc("/bestMove", findBestMove)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 

@@ -19,6 +19,11 @@ func parseMove(moveString string) uint64 {
 	for _, move := range moveList {
 		if sourceSquare == algebraic[getMoveAttr(move, "source")] &&
 			targetSquare == algebraic[getMoveAttr(move, "target")] {
+
+			// debug
+			//fmt.Printf("debug - source: %d target: %d\n", getMoveAttr(move, "source"), getMoveAttr(move, "target"))
+			//fmt.Printf("debug - source: %s target: %s\n", algebraic[getMoveAttr(move, "source")], algebraic[getMoveAttr(move, "target")])
+
 			promotedPiece := getMoveAttr(move, "promoted")
 
 			// check if a piece was promoted
@@ -85,14 +90,17 @@ func parsePosition(command string) bool {
 			}
 		}
 
-		if word == "moves" {
-			moveFlag = true
-		}
 		if moveFlag {
-			if makeMove(parseMove(word)) != 1 {
+			// check for valid move formatting and if left in check
+			if parseMove(word) == 0 || makeMove(parseMove(word)) == 0 {
 				return false
 			}
 		}
+
+		if word == "moves" {
+			moveFlag = true
+		}
+
 	}
 	return true
 }

@@ -33,8 +33,12 @@ func main() {
 
 	debug := false
 	if debug {
-		FEN := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1_moves_e2e4"
-		fmt.Println(parsePosition(strings.Replace(FEN, "_", " ", -1)))
+		FEN := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1_moves_e2e4_e7e5_g1f3_b8c6"
+		formattedFEN := "position fen " + strings.Replace(FEN, "_", " ", -1)
+
+		// check legality
+		isFENLegal := parsePosition(formattedFEN)
+		log.Printf("parsePosition(formattedFEN): %t", isFENLegal)
 	} else {
 		// get port
 		port := os.Getenv("PORT")

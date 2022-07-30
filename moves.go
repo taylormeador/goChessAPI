@@ -469,8 +469,6 @@ func makeMove(move uint64) int {
 	} else {
 		kingLocation = getLeastSignificantBitIndex(bitboards[k])
 	}
-	printBitboard(bitboards[K])
-	fmt.Printf("debug: %d\n", kingLocation)
 
 	// if the move leaves the king in check, it is not valid
 	if isSquareAttacked(kingLocation, enemySide) != 0 {

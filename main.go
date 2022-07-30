@@ -61,7 +61,7 @@ func main() {
 	// init piece attacks
 	initAll()
 
-	debug := true
+	debug := false
 	if debug {
 		FEN := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1_moves_e2e4"
 		fmt.Println(parsePosition(strings.Replace(FEN, "_", " ", -1)))

@@ -92,10 +92,9 @@ func parsePosition(command string) bool {
 			if makeMove(parseMove(word)) != 1 {
 				return false
 			}
-			return true
 		}
 	}
-	return false
+	return true
 }
 
 /*

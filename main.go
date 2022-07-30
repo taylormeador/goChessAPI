@@ -36,16 +36,17 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 
 	// log FEN
 	FEN := keys[0]
-	log.Println("Url Param 'FEN' is: " + string(FEN))
+	log.Println("Url Param 'FEN' is: " + FEN)
+	log.Println("String replaced FEN is: " + strings.Replace(FEN, "_", " ", -1))
 
 	// check legality
 	isFENLegal := parsePosition(strings.Replace(FEN, "_", " ", -1))
 
-	// build json struct
-	response := FENjson{FEN: FEN, legal: isFENLegal}
-
 	// debug
 	log.Printf("debug: %s %t", FEN, parsePosition(strings.Replace(FEN, "_", " ", -1)))
+
+	// build json struct
+	response := FENjson{FEN: FEN, legal: isFENLegal}
 
 	// send json response
 	json.NewEncoder(w).Encode(response)

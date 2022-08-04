@@ -35,10 +35,16 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	if isFENLegal == false {
 		FENfields := strings.Fields(FEN)
 		newFEN := strings.Join(FENfields[0:5], " ")
+		log.Printf("Illegal move. Returning FEN: %s", newFEN)
 		response = FENjson{FEN: newFEN}
 	}
 
 	// send json response
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Printf("JSON encoding succesful")
+	} else {
+		log.Printf("Error while sending json response %s", err)
+	}
 }

@@ -34,7 +34,7 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	response := FENjson{FEN: FEN}
 	if isFENLegal == false {
 		FENfields := strings.Fields(FEN)
-		newFEN := strings.Join(FENfields[0:5], " ")
+		newFEN := strings.Join(FENfields[0:6], " ")
 		log.Printf("Illegal move. Returning FEN: %s", newFEN)
 		response = FENjson{FEN: newFEN}
 	}

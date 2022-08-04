@@ -31,8 +31,12 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	log.Printf("parsePosition(formattedFEN): %t", isFENLegal)
 
 	// build json struct
-	response := FENjson{FEN: FEN,
-		legal: isFENLegal}
+	response := FENjson{FEN: FEN}
+	if isFENLegal == false {
+		FENfields := strings.Fields(FEN)
+		newFEN := strings.Join(FENfields[0:5], " ")
+		response = FENjson{FEN: newFEN}
+	}
 
 	// send json response
 	w.Header().Set("Content-Type", "application/json")

@@ -529,14 +529,7 @@ const (
 )
 
 type FENjson struct {
-	FEN   string `json:"FEN"`
-	legal bool   `json:"legal"`
-}
-
-type bestMovejson struct {
-	FEN   string `json:"FEN"`
-	legal bool   `json:"legal"`
-	best  string `json:"best"`
+	FEN string `json:"FEN"`
 }
 
 /*

@@ -35,9 +35,7 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 	bestMove = searchPosition(6)
 
 	// build json struct
-	response := bestMovejson{FEN: FEN,
-		legal: isFENLegal,
-		best:  decodeMove(bestMove)}
+	response := FENjson{FEN: FEN}
 
 	log.Printf(decodeMove(bestMove))
 

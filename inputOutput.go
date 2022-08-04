@@ -217,7 +217,7 @@ func generateFEN(state gameState) string {
 	}
 
 	// 2nd group is the active color
-	activeColor := " w"
+	activeColor := " w "
 	if side == black {
 		activeColor = " b "
 	}

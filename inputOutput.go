@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+var halfMoves string
+var fullMoves string
+
 // prints uint64 as bitboard
 func printBitboard(bitboard uint64) {
 	fmt.Println()
@@ -91,8 +94,8 @@ func parseFEN(FEN string) {
 	turn := splitFEN[1]
 	castling := splitFEN[2]
 	enPassant := splitFEN[3]
-	//halfMove := splitFEN[4]
-	//fullMove := splitFEN[5]
+	halfMoves = splitFEN[4]
+	fullMoves = splitFEN[5]
 
 	// loop through all the squares and look at the FEN string to determine which piece, if any, goes there
 	FENoffset := uint64(0)
@@ -213,9 +216,21 @@ func generateFEN(state gameState) string {
 		}
 	}
 
+	// 2nd group is the active color
+	activeColor := " w"
+	if side == black {
+		activeColor = " b "
+	}
+	// 3rd is castling rights
+	// 4th is possible en-passant targets
+	// 5th is half moves
+	// 6th is full moves
+
+	FEN += activeColor + castleToString(castle) + " " + algebraic[enPassantSquare] + " " + halfMoves + " " + fullMoves
+
 	// debug
 	//fmt.Printf("\npieces: %s\n", pieces)
-	//fmt.Printf("\nFEN: %s\n", FEN)
+	fmt.Printf("\nFEN: %s\n", FEN)
 
 	return FEN
 }

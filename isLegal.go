@@ -31,11 +31,16 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	log.Printf("parsePosition(formattedFEN): %t", isFENLegal)
 
 	// build json struct
-	response := FENjson{FEN: FEN}
-	if isFENLegal == false {
+	var response FENjson
+	newFEN := ""
+	if isFENLegal == false { // if move is not legal, return the FEN of the board position without the move made
 		FENfields := strings.Fields(FEN)
-		newFEN := strings.Join(FENfields[0:6], " ")
+		newFEN = strings.Join(FENfields[0:6], " ")
 		log.Printf("Illegal move. Returning FEN: %s", newFEN)
+		response = FENjson{FEN: newFEN}
+	} else { // if the move is legal, return the updated FEN of the board with the move made
+		newFEN = generateFEN(returnBoardCopy())
+		log.Printf("Legal move. Returning FEN: %s", newFEN)
 		response = FENjson{FEN: newFEN}
 	}
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -73,7 +74,7 @@ func parseFEN(FEN string) {
 	enPassantSquare = noSquare
 	castle = 0
 
-	// FEN strings are formatted with spaces separating information about the position\
+	// FEN strings are formatted with spaces separating information about the position
 	// 1st group of characters is the ranks and their pieces/spaces
 	// 2nd group is the active color
 	// 3rd is castling rights
@@ -82,7 +83,7 @@ func parseFEN(FEN string) {
 	// 6th is full moves
 	splitFEN := strings.Split(FEN, " ")
 	if len(splitFEN) != 6 {
-		fmt.Println("********** Malformed FEN string ************")
+		log.Printf("********** Malformed FEN string ************")
 		return
 	}
 
@@ -157,6 +158,66 @@ func parseFEN(FEN string) {
 
 	// both
 	occupancies[both] = occupancies[white] | occupancies[black]
+}
+
+// generates FEN string of a game state
+func generateFEN(state gameState) string {
+	// FEN strings are formatted with spaces separating information about the position
+	// 1st group of characters is the ranks and their pieces/spaces
+	// 2nd group is the active color
+	// 3rd is castling rights
+	// 4th is possible en-passant targets
+	// 5th is half moves
+	// 6th is full moves
+	FEN := ""
+
+	// set pieces
+	pieces := make([]string, 64)
+	for piece := P; piece <= k; piece++ { // debug
+		bitboard := bitboards[piece]
+		for bitboard != 0 {
+			index := getLeastSignificantBitIndex(bitboard)
+			pieces[index] = stringPieces[piece]
+			bitboard = popBit(bitboard, index)
+		}
+	}
+
+	// set empty squares
+	bitboard := ^occupancies[both]
+	for bitboard != 0 {
+		index := getLeastSignificantBitIndex(bitboard)
+		pieces[index] = "-"
+		bitboard = popBit(bitboard, index)
+	}
+
+	// build FEN string
+	pieceString := strings.Join(pieces, "")
+	emptyCount := 0
+	for pos, char := range pieceString {
+		//fmt.Printf("pos: %d char: %c\n", pos, char) // debug
+		if string(char) != "-" {
+			if emptyCount != 0 {
+				FEN += strconv.Itoa(emptyCount)
+			}
+			emptyCount = 0
+			FEN += string(char)
+		} else {
+			emptyCount++
+		}
+		if (pos+1)%8 == 0 && (0 < pos) && (pos < 63) { // add slashes at end of rows
+			if emptyCount != 0 {
+				FEN += strconv.Itoa(emptyCount)
+			}
+			emptyCount = 0
+			FEN += "/"
+		}
+	}
+
+	// debug
+	//fmt.Printf("\npieces: %s\n", pieces)
+	//fmt.Printf("\nFEN: %s\n", FEN)
+
+	return FEN
 }
 
 // print 1 or 0 for a square, depending on if it is attacked by an enemy piece or not

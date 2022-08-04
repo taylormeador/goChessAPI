@@ -16,14 +16,14 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 
 	// check that fen string is present
 	if !ok || len(keys[0]) < 1 {
-		log.Println("Url Param 'FEN' is missing")
+		log.Println("URL parameter 'FEN' is missing")
 		return
 	}
 
 	// log FEN
 	FEN := keys[0]
-	log.Println("Url parameter 'FEN' is: " + FEN)
-	log.Println("String replaced FEN is: " + strings.Replace(FEN, "_", " ", -1))
+	log.Println("URL parameter 'FEN' is: " + FEN)
+	log.Println("String-replaced FEN is: " + strings.Replace(FEN, "_", " ", -1))
 	formattedFEN := "position fen " + strings.Replace(FEN, "_", " ", -1)
 
 	// check legality
@@ -35,5 +35,6 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 		legal: isFENLegal}
 
 	// send json response
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }

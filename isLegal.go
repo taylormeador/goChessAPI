@@ -9,7 +9,6 @@ import (
 )
 
 func isLegal(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "This endpoint parses the FEN string and returns the updated game state")
 	fmt.Println("Endpoint Hit: isLegal")
 
 	// testing getting GET parameters
@@ -23,7 +22,7 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 
 	// log FEN
 	FEN := keys[0]
-	log.Println("Url Param 'FEN' is: " + FEN)
+	log.Println("Url parameter 'FEN' is: " + FEN)
 	log.Println("String replaced FEN is: " + strings.Replace(FEN, "_", " ", -1))
 	formattedFEN := "position fen " + strings.Replace(FEN, "_", " ", -1)
 

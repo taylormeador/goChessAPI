@@ -36,7 +36,7 @@ func main() {
 		//FEN := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1_moves_e2e4_e7e5_g1f3_b8c6"
 		parseFEN(trickyPosition)
 		printBoard()
-		generateFEN(returnBoardCopy())
+		generateFEN()
 	} else {
 		// get port
 		port := os.Getenv("PORT")

@@ -39,7 +39,7 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Illegal move. Returning FEN: %s", newFEN)
 		response = FENjson{FEN: newFEN}
 	} else { // if the move is legal, return the updated FEN of the board with the move made
-		newFEN = generateFEN(returnBoardCopy())
+		newFEN = generateFEN()
 		log.Printf("Legal move. Returning FEN: %s", newFEN)
 		response = FENjson{FEN: newFEN}
 	}

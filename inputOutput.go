@@ -153,10 +153,9 @@ func parseFEN(FEN string) {
 	// increment moves
 	halfMoves, _ = strconv.Atoi(halfMovesStr)
 	fullMoves, _ = strconv.Atoi(fullMovesStr)
-	if side == white {
+	if side == black {
 		fullMoves++
 	}
-	halfMoves++
 
 	// set occupancies
 	// loop through white pieces

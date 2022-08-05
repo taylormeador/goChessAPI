@@ -76,6 +76,8 @@ func parseFEN(FEN string) {
 	side = 0
 	enPassantSquare = noSquare
 	castle = 0
+	halfMoves = 0
+	fullMoves = 0
 
 	// FEN strings are formatted with spaces separating information about the position
 	// 1st group of characters is the ranks and their pieces/spaces

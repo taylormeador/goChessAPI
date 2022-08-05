@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-var halfMoves string
-var fullMoves string
+var halfMoves int
+var fullMoves int
 
 // prints uint64 as bitboard
 func printBitboard(bitboard uint64) {
@@ -94,8 +94,8 @@ func parseFEN(FEN string) {
 	turn := splitFEN[1]
 	castling := splitFEN[2]
 	enPassant := splitFEN[3]
-	halfMoves = splitFEN[4]
-	fullMoves = splitFEN[5]
+	halfMovesStr := splitFEN[4]
+	fullMovesStr := splitFEN[5]
 
 	// loop through all the squares and look at the FEN string to determine which piece, if any, goes there
 	FENoffset := uint64(0)
@@ -148,6 +148,14 @@ func parseFEN(FEN string) {
 	// en passant
 	enPassantSquare = squareStringToUint64(enPassant)
 
+	// increment moves
+	halfMoves, _ = strconv.Atoi(halfMovesStr)
+	fullMoves, _ = strconv.Atoi(fullMovesStr)
+	if side == white {
+		fullMoves++
+	}
+	halfMoves++
+
 	// set occupancies
 	// loop through white pieces
 	for piece := P; piece <= K; piece++ {
@@ -164,7 +172,7 @@ func parseFEN(FEN string) {
 }
 
 // generates FEN string of a game state
-func generateFEN(state gameState) string {
+func generateFEN() string {
 	// FEN strings are formatted with spaces separating information about the position
 	// 1st group of characters is the ranks and their pieces/spaces
 	// 2nd group is the active color
@@ -226,7 +234,7 @@ func generateFEN(state gameState) string {
 	// 5th is half moves
 	// 6th is full moves
 
-	FEN += activeColor + castleToString(castle) + " " + algebraic[enPassantSquare] + " " + halfMoves + " " + fullMoves
+	FEN += activeColor + castleToString(castle) + " " + algebraic[enPassantSquare] + " " + strconv.Itoa(halfMoves) + " " + strconv.Itoa(fullMoves)
 
 	// debug
 	//fmt.Printf("\npieces: %s\n", pieces)

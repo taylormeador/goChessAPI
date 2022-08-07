@@ -486,7 +486,7 @@ func makeMove(move uint64) int {
 		side = enemySide
 		// check if move is a capture or pawn move. If it is not, increment the half move counter
 		halfMoves++
-		if getMoveAttr(move, "capture") != 0 || getMoveAttr(move, "source")&bitboards[p] != 0 || getMoveAttr(move, "source")&bitboards[P] != 0 {
+		if getMoveAttr(move, "capture") != 0 || getMoveAttr(move, "piece") == p || getMoveAttr(move, "piece") == P {
 			halfMoves = 0
 		}
 		return 1

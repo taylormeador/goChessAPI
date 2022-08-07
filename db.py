@@ -1,15 +1,15 @@
 import psycopg2
+import config
 
 
 def connect():
     """ Connect to the PostgreSQL database server """
-    conn = None
     try:
         # read connection parameters
-        params = {"host": "ec2-107-22-122-106.compute-1.amazonaws.com",
-                  "database": "d8ce7g1pdv8bao",
-                  "user": "vdxeyeechvtzph",
-                  "password": "bb994a8f08701050c5b0c0fdb33ef02525dacf7b0ccc6f3dc227be088cb8db7b"}
+        params = {"host": config.host,
+                  "database": config.database,
+                  "user": config.user,
+                  "password": config.password}
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')

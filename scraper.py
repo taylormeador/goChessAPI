@@ -1,10 +1,12 @@
 import requests
 import db
+import time
 
 LICHESS_API_URL = "https://explorer.lichess.ovh/masters"
 GO_CHESS_API_URL = "https://go-chess-api.herokuapp.com/isLegal"
 START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-DEPTH = 20
+DEPTH = 10
+BREADTH = 2
 
 
 class InsertQueryValues:
@@ -48,15 +50,21 @@ class InsertQueryValues:
 
 
 # query the lichess api endpoint and return the json response
-def get_request(fen):
+def get_request(fen, tries=0):
     url = LICHESS_API_URL + "?fen=" + fen
-    r = requests.get(url)
+    try:
+        r = requests.get(url)
+    except Exception:
+        tries += 1
+        if tries <= 10:
+            time.sleep(5)
+            get_request(fen, tries)
+        else:
+            r = "Error getting fen from Lichess"
     return r.json()
 
 
 value_objects = []
-move_nums = ["move_1", "move_2", "move_3", "move_4", "move_5", "move_6", "move_7", "move_8", "move_9", "move_10"]
-
 
 # parse the json response and extract the top n moves
 def get_top_moves(fen, moves):
@@ -95,23 +103,41 @@ def driver(fen, depth):
     if depth == 0:
         return
 
-    moves = get_top_moves(fen, depth // 2 + 1)
+    moves = get_top_moves(fen, BREADTH)
     for new_fen in moves:
         driver(new_fen, depth - 1)
 
 
 def insert_in_db(values):
+    print("*********************************************")
     cur, conn = db.connect()
-    # query
-    query = f"""INSERT INTO opening_book (fen, name, move_1, move_2, move_3, move_4, move_5, 
-    move_6, move_7, move_8, move_9, move_10) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
+    # check if the entry already exists
+    query = f"""SELECT * FROM opening_book WHERE fen = (%s);"""
+    print(f"Selecting from db: {values.fen}")
+    cur.execute(query, (values.fen,))
+    result = cur.fetchone()
 
-    print(f"Inserting to db: {values.fen}, {values.name}, {values.moves}")
-    cur.execute(query, (values.fen, values.name, values.move_1, values.move_2, values.move_3, values.move_4,
-                        values.move_5, values.move_6, values.move_7, values.move_8, values.move_9,values.move_10))
+    # check if the entry already exists
+    if result:
+        print(f"FEN already exists in db, checking breadth....")
+        num_of_moves = 10 - result[2:].count(None)
+        if num_of_moves < len(values.moves):
+            # TODO update the move_n col
+            print("Additional moves available")
+            return
+        print("No new moves available - nothing to do")
+        return
+    else:  # add the entry if it doesn't exist
+        # query
+        query = f"""INSERT INTO opening_book (fen, name, move_1, move_2, move_3, move_4, move_5, 
+        move_6, move_7, move_8, move_9, move_10) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
 
-    # Make the changes to the database persistent
-    conn.commit()
+        print(f"Inserting to db: {values.fen}, {values.name}, {values.moves}")
+        cur.execute(query, (values.fen, values.name, values.move_1, values.move_2, values.move_3, values.move_4,
+                            values.move_5, values.move_6, values.move_7, values.move_8, values.move_9, values.move_10))
+
+        # Make the changes to the database persistent
+        conn.commit()
 
 
 # main func call

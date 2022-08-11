@@ -26,7 +26,7 @@ func handleRequests(port string) {
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
-var debug = true
+var debug = false
 
 // main
 func main() {
@@ -35,7 +35,7 @@ func main() {
 
 	if debug { // testing
 		// set env variable for db
-		envVariable()
+		//envVariable()
 		//FEN := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1_moves_e2e4_e7e5_g1f3_b8c6"
 		parseFEN(startPosition)
 		//printMove(searchPosition(2))

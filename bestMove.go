@@ -1,12 +1,17 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
+
+var DEPTH = 6
 
 func findBestMove(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "This endpoint parses the FEN string and returns the best move the engine can find")
@@ -17,13 +22,13 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 
 	// check that fen string is present
 	if !ok || len(keys[0]) < 1 {
-		log.Println("Url Param 'FEN' is missing")
+		log.Println("URL parameter 'FEN' is missing")
 		return
 	}
 
 	// log FEN
 	FEN := keys[0]
-	log.Println("Url Param 'FEN' is: " + FEN)
+	log.Println("URL parameter 'FEN' is: " + FEN)
 	log.Println("String replaced FEN is: " + strings.Replace(FEN, "_", " ", -1))
 	formattedFEN := "position fen " + strings.Replace(FEN, "_", " ", -1)
 
@@ -32,7 +37,13 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 	log.Printf("parsePosition(formattedFEN): %t", isFENLegal)
 
 	// find best move
-	bestMove = searchPosition(6)
+	bookMove := checkForBookMove(FEN)
+	if bookMove != "No book move found" {
+		log.Println("Found book move") // debug
+		FEN = bookMove
+	} else {
+		bestMove = searchPosition(DEPTH)
+	}
 
 	// build json struct
 	response := FENjson{FEN: FEN}
@@ -41,4 +52,36 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 
 	// send json response
 	json.NewEncoder(w).Encode(response)
+}
+
+type bookMove struct {
+	FEN string
+}
+
+// look at the opening_book db table and see if we can just return the best move from there instead of searching/evaluating manually
+func checkForBookMove(FEN string) string {
+	// Create DB pool
+	DatabaseURL := os.Getenv("DATABASE_URL")
+	db, err := sql.Open("postgres", DatabaseURL)
+	if err != nil {
+		log.Fatal("Failed to open a DB connection: ", err)
+	}
+	defer db.Close()
+
+	// Create an empty best move struct and make the sql query (using $1 for the parameter)
+	var topBookMove bookMove
+	query := "SELECT move_1 FROM opening_book WHERE fen = $1"
+	err = db.QueryRow(query, FEN).Scan(&topBookMove.FEN)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Printf("No book move found for FEN: %s", FEN) // debug
+			return "No book move found"
+		} else {
+			log.Fatal("Failed to execute query: ", err)
+		}
+	}
+
+	// return FEN with the best move made on the board
+	fmt.Printf("Book move result: %s\n", topBookMove.FEN)
+	return FEN
 }

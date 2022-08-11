@@ -48,10 +48,15 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 	// build json struct
 	response := FENjson{FEN: FEN}
 
-	log.Printf(decodeMove(bestMove))
-
 	// send json response
-	json.NewEncoder(w).Encode(response)
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Printf("Error while sending json response %s", err)
+	} else {
+		log.Printf("JSON encoding succesful - %s", FEN)
+	}
+
 }
 
 type bookMove struct {

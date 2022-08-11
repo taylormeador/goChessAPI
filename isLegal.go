@@ -48,8 +48,8 @@ func isLegal(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(response)
 	if err != nil {
-		log.Printf("JSON encoding succesful")
-	} else {
 		log.Printf("Error while sending json response %s", err)
+	} else {
+		log.Printf("JSON encoding succesful - %s", newFEN)
 	}
 }

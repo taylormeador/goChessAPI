@@ -88,5 +88,5 @@ func checkForBookMove(FEN string) string {
 
 	// return FEN with the best move made on the board
 	fmt.Printf("Book move result: %s\n", topBookMove.FEN)
-	return FEN
+	return topBookMove.FEN
 }

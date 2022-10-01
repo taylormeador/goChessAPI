@@ -50,35 +50,3 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-
-//type bookMove struct {
-//	FEN string
-//}
-
-// look at the opening_book db table and see if we can just return the best move from there instead of searching/evaluating manually
-//func checkForBookMove(FEN string) string {
-//	// Create DB pool
-//	DatabaseURL := os.Getenv("DATABASE_URL")
-//	db, err := sql.Open("postgres", DatabaseURL)
-//	if err != nil {
-//		log.Fatal("Failed to open a DB connection: ", err)
-//	}
-//	defer db.Close()
-//
-//	// Create an empty best move struct and make the sql query (using $1 for the parameter)
-//	var topBookMove bookMove
-//	query := "SELECT move_1 FROM opening_book WHERE fen = $1"
-//	err = db.QueryRow(query, FEN).Scan(&topBookMove.FEN)
-//	if err != nil {
-//		if err == sql.ErrNoRows {
-//			log.Printf("No book move found for FEN: %s", FEN) // debug
-//			return "No book move found"
-//		} else {
-//			log.Fatal("Failed to execute query: ", err)
-//		}
-//	}
-//
-//	// return FEN with the best move made on the board
-//	fmt.Printf("Book move result: %s\n", topBookMove.FEN)
-//	return topBookMove.FEN
-//}

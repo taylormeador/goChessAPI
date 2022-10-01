@@ -12,7 +12,6 @@ import (
 var DEPTH = 6
 
 func findBestMove(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "This endpoint parses the FEN string and returns the best move")
 	fmt.Println("Endpoint Hit: bestMove")
 
 	// testing getting GET parameters
@@ -36,11 +35,11 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 
 	// find best move
 	bestMove = searchPosition(DEPTH)
-
-	// build json struct
-	response := FENjson{FEN: FEN}
+	makeMove(bestMove)
+	FEN = generateFEN()
 
 	// send json response
+	response := FENjson{FEN: FEN}
 	w.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(response)
 	if err != nil {

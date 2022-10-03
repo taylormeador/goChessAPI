@@ -45,9 +45,9 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 	checkmate := false
 	stalemate := false
 	if newFEN == FEN {
-		currentKingBitboard := bitboards[k]
+		currentKingBitboard := bitboards[K]
 		if side == white {
-			currentKingBitboard = bitboards[K]
+			currentKingBitboard = bitboards[k]
 		}
 		// check if king is in check
 		inCheck := isSquareAttacked(getLeastSignificantBitIndex(currentKingBitboard), side)

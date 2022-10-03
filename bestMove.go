@@ -44,10 +44,12 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 	// check for checkmate/stalemate
 	checkmate := false
 	stalemate := false
-	log.Printf("FEN: %s", FEN)
-	log.Printf("newFEN: %s", newFEN)
-	if newFEN == FEN {
-		log.Printf("FEN == newFEN")
+	FENturn := strings.Split(FEN, " ")[1]
+	newFENturn := strings.Split(newFEN, " ")[1]
+	log.Printf("FEN: %s", FENturn)
+	log.Printf("newFEN: %s", newFENturn)
+	if FENturn == newFENturn {
+		log.Printf("FENturn == newFENturn")
 		currentKingBitboard := bitboards[k]
 		if side == white {
 			currentKingBitboard = bitboards[K]

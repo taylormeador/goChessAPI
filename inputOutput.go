@@ -204,9 +204,9 @@ func generateFEN() string {
 
 	// build FEN string
 	pieceString := strings.Join(pieces, "")
+	fmt.Println(pieceString)
 	emptyCount := 0
 	for pos, char := range pieceString {
-		//fmt.Printf("pos: %d char: %c\n", pos, char) // debug
 		if string(char) != "-" {
 			if emptyCount != 0 {
 				FEN += strconv.Itoa(emptyCount)

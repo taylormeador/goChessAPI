@@ -529,7 +529,9 @@ const (
 )
 
 type FENjson struct {
-	FEN string `json:"FEN"`
+	FEN       string `json:"FEN"`
+	Checkmate bool   `json:"Checkmate"`
+	Stalemate bool   `json:"Stalemate"`
 }
 
 /*

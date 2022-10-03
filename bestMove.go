@@ -27,19 +27,44 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 	FEN := keys[0]
 	log.Println("URL parameter 'FEN' is: " + FEN)
 	log.Println("String replaced FEN is: " + strings.Replace(FEN, "_", " ", -1))
-	formattedFEN := "position fen " + strings.Replace(FEN, "_", " ", -1)
 
 	// check legality
+	formattedFEN := "position fen " + strings.Replace(FEN, "_", " ", -1)
 	isFENLegal := parsePosition(formattedFEN)
 	log.Printf("parsePosition(formattedFEN): %t", isFENLegal)
+	if isFENLegal == false {
+		log.Printf("Illegal FEN - TODO need to figure out what to do in this case")
+	}
 
 	// find best move
 	bestMove = searchPosition(DEPTH)
 	makeMove(bestMove)
-	FEN = generateFEN()
+	newFEN := generateFEN()
+
+	// check for checkmate/stalemate
+	checkmate := false
+	stalemate := false
+	if newFEN == FEN {
+		currentKingBitboard := bitboards[k]
+		if side == white {
+			currentKingBitboard = bitboards[K]
+		}
+		// check if king is in check
+		inCheck := isSquareAttacked(getLeastSignificantBitIndex(currentKingBitboard), side)
+		if inCheck != 0 {
+			checkmate = true
+		} else { // king not in check
+			stalemate = true
+		}
+	}
 
 	// send json response
-	response := FENjson{FEN: FEN}
+	response := FENjson{
+		FEN:       newFEN,
+		Checkmate: checkmate,
+		Stalemate: stalemate,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(response)
 	if err != nil {

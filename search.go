@@ -49,7 +49,6 @@ func negaMax(alpha int, beta int, depth int) int {
 			alpha = score
 
 			// update best move iff the half move counter is 0 (root node)
-			// debug
 			if ply == 0 {
 				bestMove = moveList[count]
 			}

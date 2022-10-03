@@ -33,10 +33,12 @@ func main() {
 	// init piece attacks
 	initAll()
 
-	if debug { // testing
-		//FEN := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1_moves_e2e4_e7e5_g1f3_b8c6"
-		parseFEN(startPosition)
-		//printMove(searchPosition(2))
+	if debug {
+		parsePosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+		printBoard()
+		//newFEN := generateFEN()
+		//parseFEN(newFEN)
+		//printBoard()
 
 	} else { // production
 		// get port

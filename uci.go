@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -82,11 +83,22 @@ func parsePosition(command string) bool {
 		// command uses either "startpos" or "fen" to tell engine what position to init
 		if i == 1 {
 			if word == "startpos" {
-				parseFEN(startPosition)
+				startFEN, err := FENfromString(startPosition)
+				if err != nil {
+					log.Fatal(err)
+				} else {
+					parseFEN(startFEN)
+				}
+
 			} else if word == "fen" {
-				fen := words[i+1 : i+7]
-				fenString := strings.Join(fen, " ")
-				parseFEN(fenString)
+				FENStringSlice := words[i+1 : i+7]
+				FENString := strings.Join(FENStringSlice, " ")
+				FENType, err := FENfromString(FENString)
+				if err != nil {
+					log.Fatal(err)
+				} else {
+					parseFEN(FENType)
+				}
 			}
 		}
 

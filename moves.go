@@ -454,12 +454,12 @@ func makeMove(move uint64) int {
 	// reset then update occupancies
 	occupancies[white], occupancies[black], occupancies[both] = 0, 0, 0
 
-	// loop through white pieces
+	// loop through white piecesStr
 	for whitePiece := P; whitePiece <= K; whitePiece++ {
 		occupancies[white] |= bitboards[whitePiece]
 	}
 
-	// loop through black pieces
+	// loop through black piecesStr
 	for blackPiece := p; blackPiece <= k; blackPiece++ {
 		occupancies[black] |= bitboards[blackPiece]
 	}

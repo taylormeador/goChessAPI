@@ -26,7 +26,7 @@ func handleRequests(port string) {
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
-var debug = false
+var debug = true
 
 // main
 func main() {
@@ -34,8 +34,10 @@ func main() {
 	initAll()
 
 	if debug {
-		parsePosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+		startFEN, _ := FENfromString(startPosition)
+		parseFEN(startFEN)
 		printBoard()
+		printBitboard(bitboards[6])
 		//newFEN := generateFEN()
 		//parseFEN(newFEN)
 		//printBoard()

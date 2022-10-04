@@ -19,17 +19,17 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 
 	// check that fen string is present
 	if !ok || len(keys[0]) < 1 {
-		log.Println("URL parameter 'FEN' is missing")
+		log.Printf("URL parameter 'FEN' is missing")
 		return
 	}
 
 	// log FEN
-	FEN := keys[0]
-	log.Println("URL parameter 'FEN' is: " + FEN)
-	log.Println("String replaced FEN is: " + strings.Replace(FEN, "_", " ", -1))
+	FENString := keys[0]
+	log.Println("URL parameter 'FEN' is: " + FENString)
+	log.Println("String replaced FEN is: " + strings.Replace(FENString, "_", " ", -1))
 
 	// check legality
-	formattedFEN := "position fen " + strings.Replace(FEN, "_", " ", -1)
+	formattedFEN := "position fen " + strings.Replace(FENString, "_", " ", -1)
 	isFENLegal := parsePosition(formattedFEN)
 	log.Printf("parsePosition(formattedFEN): %t", isFENLegal)
 	if isFENLegal == false {
@@ -39,16 +39,13 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 	// find best move
 	bestMove = searchPosition(DEPTH)
 	makeMove(bestMove)
-	newFEN := generateFEN()
+	newFEN, _ := generateFEN()
 
 	// check for checkmate/stalemate
 	checkmate := false
 	stalemate := false
-	FENturn := strings.Split(FEN, " ")[1]
-	newFENturn := strings.Split(newFEN, " ")[1]
-	log.Printf("FEN: %s", FENturn)
-	log.Printf("newFEN: %s", newFENturn)
-	if FENturn == newFENturn {
+	FENturn := strings.Split(FENString, " ")[1]
+	if FENturn == newFEN.turnStr {
 		log.Printf("FENturn == newFENturn")
 		currentKingBitboard := bitboards[k]
 		if side == white {
@@ -56,7 +53,6 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 		}
 		// check if king is in check
 		inCheck := isSquareAttacked(getLeastSignificantBitIndex(currentKingBitboard), side)
-		log.Printf("side: %d, currentKingBitboard: %d", side, currentKingBitboard)
 		if inCheck != 0 {
 			checkmate = true
 		} else { // king not in check
@@ -66,7 +62,7 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 
 	// send json response
 	response := FENjson{
-		FEN:       newFEN,
+		FEN:       newFEN.FENStr,
 		Checkmate: checkmate,
 		Stalemate: stalemate,
 	}
@@ -74,9 +70,9 @@ func findBestMove(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(response)
 	if err != nil {
-		log.Printf("Error while sending json response %s", err)
+		log.Printf("error while sending json response %s", err)
 	} else {
-		log.Printf("JSON encoding succesful - %s", FEN)
+		log.Printf("JSON encoding succesful - %s", FENString)
 	}
 
 }

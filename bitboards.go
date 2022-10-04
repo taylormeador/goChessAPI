@@ -1,6 +1,6 @@
 package main
 
-// individual pieces
+// individual piecesStr
 var bitboards [12]uint64
 
 // by colors

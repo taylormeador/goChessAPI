@@ -13,7 +13,7 @@ func evaluate() int {
 
 			// score positional piece scores
 			switch piece {
-			// evaluate white pieces
+			// evaluate white piecesStr
 			case P:
 				score += pawnScore[square]
 				break
@@ -30,7 +30,7 @@ func evaluate() int {
 				score += kingScore[square]
 				break
 
-			// evaluate black pieces
+			// evaluate black piecesStr
 			case p:
 				score -= pawnScore[mirrorScore[square]]
 				break

@@ -231,8 +231,8 @@ func squareStringToUint64(s string) uint64 {
 	return noSquare
 }
 
-// enumerate pieces
-// uppercase represents white pieces, lowercase represents black
+// enumerate piecesStr
+// uppercase represents white piecesStr, lowercase represents black
 const (
 	P = iota
 	N
@@ -321,7 +321,7 @@ var asciiPieces = [12]byte{
 
 // unicode pieces
 var unicodePieces = [12]string{
-	"♟", "♞", "♝", "♜", "♛", "♚", "♙", "♘", "♗", "♖", "♕", "♔",
+	"♙", "♞", "♝", "♜", "♛", "♚", "♟", "♘", "♗", "♖", "♕", "♔",
 }
 
 // convert ASCII character to encoded constants
